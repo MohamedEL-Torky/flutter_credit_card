@@ -36,6 +36,7 @@ class CreditCardForm extends StatefulWidget {
     this.cvvValidationMessage = 'Please input a valid CVV',
     this.dateValidationMessage = 'Please input a valid date',
     this.numberValidationMessage = 'Please input a valid number',
+    this.nameValidationMessage = 'Please input a valid name',
   }) : super(key: key);
 
   final String cardNumber;
@@ -45,6 +46,7 @@ class CreditCardForm extends StatefulWidget {
   final String cvvValidationMessage;
   final String dateValidationMessage;
   final String numberValidationMessage;
+  final String nameValidationMessage;
   final void Function(CreditCardModel) onCreditCardModelChange;
   final Color themeColor;
   final Color textColor;
@@ -63,6 +65,7 @@ class CreditCardForm extends StatefulWidget {
 }
 
 class _CreditCardFormState extends State<CreditCardForm> {
+  static final RegExp nameRegExp = RegExp('[a-zA-Z]');
   String cardNumber;
   String expiryDate;
   String cardHolderName;
@@ -225,7 +228,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                         final int year = int.parse('20${date.last}');
                         final DateTime cardDate = DateTime(year, month);
 
-                        if (cardDate.isBefore(now) || month > 12 || month == 0) {
+                        if (cardDate.isBefore(now) ||
+                            month > 12 ||
+                            month == 0) {
                           return widget.dateValidationMessage;
                         }
                         return null;
@@ -282,6 +287,14 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 textInputAction: TextInputAction.done,
                 onEditingComplete: () {
                   onCreditCardModelChange(creditCardModel);
+                },
+                validator: (value) {
+                  if (value.isEmpty ||
+                      value.length < 3 ||
+                      !nameRegExp.hasMatch(value)) {
+                    return widget.nameValidationMessage;
+                  }
+                  return null;
                 },
               ),
             ),
