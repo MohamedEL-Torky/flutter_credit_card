@@ -146,6 +146,10 @@ class _CreditCardFormState extends State<CreditCardForm> {
         onCreditCardModelChange(creditCardModel);
       });
     });
+    _cardNumberController.text = cardNumber;
+    _expiryDateController.text = expiryDate;
+    _cardHolderNameController.text = cardHolderName;
+    _cvvCodeController.text = cvvCode;
   }
 
   @override
@@ -289,8 +293,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   onCreditCardModelChange(creditCardModel);
                 },
                 validator: (value) {
-                  if (value.isEmpty ||
-                      value.length < 3 ||
+                  if ((value.isEmpty || value.length < 3) &&
                       !nameRegExp.hasMatch(value)) {
                     return widget.nameValidationMessage;
                   }
